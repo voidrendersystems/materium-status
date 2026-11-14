@@ -1,31 +1,57 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+owner: voidrendersystems
+repo: materium-status
 
+# Every Materium endpoint sits behind the CloudFront distribution for
+# materium.gg, which forwards to one ALB. The ALB sends /healthz and
+# /graphql to the API service (materium-api-v2) and everything else to
+# the web service (materium-web). See packages/infra/lib/materium-stack.ts
+# in the materium repo.
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  - name: Website
+    url: https://materium.gg
+    maxResponseTime: 5000
+
+  - name: Web Health
+    url: https://materium.gg/api/health
+    maxResponseTime: 2000
+    __dangerous__body_down_if_text_missing: "ok"
+
+  - name: API Health
+    url: https://materium.gg/healthz
+    maxResponseTime: 2000
+    __dangerous__body_down_if_text_missing: '"status":"ok"'
+
+  - name: GraphQL API
+    url: https://materium.gg/graphql
+    method: POST
+    headers:
+      - "Content-Type: application/json"
+    body: '{"query":"{__typename}"}'
+    maxResponseTime: 3000
+    __dangerous__body_down_if_text_missing: '"__typename":"Query"'
+
+  - name: Games Catalog
+    url: https://materium.gg/games
+    maxResponseTime: 5000
+
+  - name: www Redirect
+    url: https://www.materium.gg
+    maxResponseTime: 5000
+
+  - name: mychronicle.games Redirect
+    url: https://mychronicle.games
+    maxResponseTime: 5000
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  baseUrl: /materium-status
+  logoUrl: https://raw.githubusercontent.com/voidrendersystems/materium-status/master/assets/materium-icon.png
+  name: Materium Status
+  introTitle: "**Materium** service status"
+  introMessage: Live status of [materium.gg](https://materium.gg), checked every five minutes.
   navbar:
     - title: Status
       href: /
+    - title: Materium
+      href: https://materium.gg
     - title: GitHub
       href: https://github.com/$OWNER/$REPO
-
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
