@@ -43,7 +43,7 @@ sites:
     maxResponseTime: 5000
 
 status-website:
-  baseUrl: /materium-status
+  cname: status.materium.gg
   logoUrl: https://raw.githubusercontent.com/voidrendersystems/materium-status/master/assets/materium-icon.png
   name: Materium Status
   introTitle: "**Materium** service status"
